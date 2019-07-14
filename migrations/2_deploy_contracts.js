@@ -1,5 +1,5 @@
-var Game = artifacts.require("./Game.sol");
+var SimpleCounter = artifacts.require("./SimpleCounter.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(Game);
+  deployer.deploy(SimpleCounter);
 };

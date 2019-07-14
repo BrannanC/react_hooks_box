@@ -1,30 +1,44 @@
-import React, { useEffect, useState } from "react";
-import Game from "./contracts/Game.json";
+import React, { useEffect, useState, useCallback } from "react";
+import SimpleCounter from "./contracts/SimpleCounter.json";
 import getWeb3 from "./utils/getWeb3";
 
 import "./App.css";
 
 const App = () => {
-  const [gameState, setGameState] = useState({ player_one: "", web3: null, player_two: "", contract: null });
+  const [counterState, setCounterState] = useState({
+    count: 0,
+    web3: null,
+    contract: null,
+    account: ""
+  });
 
-  const initGame = async () => {
-    console.log('hi')
+  const getCount = useCallback(async () => {
+    const count = await counterState.contract.methods.count().call();
+    setCounterState({ ...counterState, count: count.toNumber() });
+  });
+
+  const initCounter = async () => {
     try {
       // Get network provider and web3 instance.
       const web3 = getWeb3();
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = Game.networks[networkId];
+      const deployedNetwork = SimpleCounter.networks[networkId];
       const instance = new web3.eth.Contract(
-        Game.abi,
+        SimpleCounter.abi,
         deployedNetwork.address
       );
 
-        console.log(instance)
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      setGameState({ web3,  contract: instance });
+      let count = await instance.methods.count().call();
+      count = count.toNumber();
+
+      setCounterState({
+        web3,
+        contract: instance,
+        count,
+        account: instance.givenProvider.selectedAddress
+      });
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -32,17 +46,39 @@ const App = () => {
       );
       console.error(error);
     }
-  }
+  };
+
+  const addCount = async e => {
+    e.preventDefault();
+    await counterState.contract.methods
+      .addCount()
+      .send({ from: counterState.account });
+  };
+
   useEffect(() => {
-    initGame()
+    initCounter();
   }, []);
 
-    return (
-      !gameState.web3 ? <div>Loading Web3, accounts, and contract...</div> :
-       <div className="App">
-        <h1>Good to Go!</h1>
-      </div>
-    );
-}
+  useEffect(() => {
+    if (counterState.contract)
+      counterState.contract.events
+        .AddCount({
+          fromBlock: "latest"
+        })
+        .on("data", event => {
+          getCount();
+        });
+  }, [counterState.contract, getCount]);
+
+  return !counterState.web3 ? (
+    <div>Loading Web3, accounts, and contract...</div>
+  ) : (
+    <div className="App">
+      <h1>Happy Hacking!</h1>
+      <h3>Count: {counterState.count}</h3>
+      <button onClick={e => addCount(e)}>Count++</button>
+    </div>
+  );
+};
 
 export default App;
