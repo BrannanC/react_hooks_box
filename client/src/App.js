@@ -15,7 +15,7 @@ const App = () => {
   const getCount = useCallback(async () => {
     const count = await counterState.contract.methods.count().call();
     setCounterState({ ...counterState, count: count.toNumber() });
-  });
+  }, [counterState]);
 
   const initCounter = async () => {
     try {
@@ -59,7 +59,7 @@ const App = () => {
     initCounter();
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { // Gets a new count on AddCount event
     if (counterState.contract)
       counterState.contract.events
         .AddCount({
