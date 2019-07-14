@@ -1,0 +1,10 @@
+{
+  "ignore": ["readme.md"],
+  "commands": {
+    "Compile contracts": "truffle compile",
+    "Migrate contracts": "truffle migrate"
+  },
+  "hooks": {
+    "post-unpack": "cd client && npm install"
+  }
+}
