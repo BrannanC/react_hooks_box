@@ -31,13 +31,15 @@ const App = () => {
       );
 
       let count = await instance.methods.count().call();
-      count = count.toNumber();
+      const account = instance.givenProvider.selectedAddress;
+          
+      count = count ? count.toNumber() : 0;
 
       setCounterState({
         web3,
         contract: instance,
         count,
-        account: instance.givenProvider.selectedAddress
+        account
       });
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -50,6 +52,7 @@ const App = () => {
 
   const addCount = async e => {
     e.preventDefault();
+    console.log(counterState.account)
     await counterState.contract.methods
       .addCount()
       .send({ from: counterState.account });
