@@ -44,18 +44,13 @@ A detailed explaination of how to do this can be found [here](https://trufflefra
 
 ## Running
 
-1. Install dependencies using Yarn. In the client directory run:
-  ```bash
-  yarn
-  ```
-  
-2. Run the app using Yarn:
+1. Dependencies are automatically installed with Yarn. Run the app using Yarn:
 ```bash
 yarn start
 ```
 The app is now served on localhost:3000
 
-3. Making sure you have configured MetaMask, visit http://localhost:3000 in your browser.
+2. Making sure you have configured MetaMask, visit http://localhost:3000 in your browser.
 
 ## Testing
 
