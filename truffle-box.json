@@ -5,6 +5,6 @@
     "Migrate contracts": "truffle migrate"
   },
   "hooks": {
-    "post-unpack": "cd client && npm install"
+    "post-unpack": "cd client && yarn"
   }
 }
