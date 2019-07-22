@@ -1,6 +1,6 @@
 # Truffle Box for React using Hooks
 
-This Truffle Box is a base fore working with the Truffle framework and React. 
+This Truffle Box is a base for working with the Truffle framework and React. 
 It provides a working example of a simple counter contract with corresponding react components.
 
 ## Prerequisites
